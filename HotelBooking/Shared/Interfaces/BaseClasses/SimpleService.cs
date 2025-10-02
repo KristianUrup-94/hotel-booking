@@ -1,7 +1,4 @@
 ﻿
-using Rooms;
-using Shared.Interfaces;
-
 namespace Shared.Interfaces.BaseClasses
 {
     public abstract class SimpleService<T> : ISimpleService<T> where T : class

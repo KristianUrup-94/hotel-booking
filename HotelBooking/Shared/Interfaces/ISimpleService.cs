@@ -1,4 +1,4 @@
-﻿namespace Rooms
+﻿namespace Shared.Interfaces
 {
     public interface ISimpleService<T>
     {

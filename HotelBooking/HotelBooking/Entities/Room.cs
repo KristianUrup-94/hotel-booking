@@ -1,4 +1,4 @@
-﻿namespace Rooms
+﻿namespace Rooms.Entity
 {
     public class Room
     {

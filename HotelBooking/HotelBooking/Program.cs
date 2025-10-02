@@ -2,9 +2,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Rooms;
+using Rooms.Entity;
+using Rooms.Infrastructure;
+using Rooms.Services;
 using Shared.Interfaces;
 using Shared.Interfaces.BaseClasses;
 using Shared.Interfaces.Implementation;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,21 +18,26 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Microservice specific
 builder.Services.AddDbContext<RoomsDbContext>((options) => {
     
-    options.UseSqlServer(@"Server=.\mssqllocaldb;Database=Test;ConnectRetryCount=0");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
 builder.Services.AddScoped<IRepository<Room>, Repository<Room>>((services) => {
     return new Repository<Room>(services.GetRequiredService<RoomsDbContext>());
 });
-//builder.Services.AddScoped<ISimpleService<Room>, BaseService<Room>>();
 builder.Services.AddScoped<ISimpleService<Room>, Service>();
+
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    RoomsDbContext context = app.Services.GetRequiredService<RoomsDbContext>();
+    context.Database.EnsureCreated();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

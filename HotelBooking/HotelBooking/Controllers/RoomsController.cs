@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Rooms.Entity;
+using Shared.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,11 +8,11 @@ namespace Rooms.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoomController : ControllerBase
+    public class RoomsController : ControllerBase
     {
         private readonly ISimpleService<Room> _roomService;
 
-        public RoomController(ISimpleService<Room> roomService) 
+        public RoomsController(ISimpleService<Room> roomService) 
         {
             _roomService = roomService;
         }
