@@ -1,7 +1,4 @@
 ﻿
-using Rooms;
-using Shared.Interfaces;
-
 namespace Shared.Interfaces.BaseClasses
 {
     public abstract class SimpleService<T> : ISimpleService<T> where T : class
@@ -12,12 +9,12 @@ namespace Shared.Interfaces.BaseClasses
         {
             _repo = repo;
         }
-        public void CreateRoom(T entity)
+        public void Create(T entity)
         {
             _repo.Add(entity);
         }
 
-        public void DeleteRoom(int id)
+        public void Delete(int id)
         {
             _repo.Delete(id);
         }
@@ -32,7 +29,7 @@ namespace Shared.Interfaces.BaseClasses
             return _repo.GetAll().ToList();
         }
 
-        public void UpdateRoom(T room)
+        public void Update(T room)
         {
             _repo.Update(room);
         }

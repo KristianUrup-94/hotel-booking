@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Authentication;
+using Bookings.Entity;
+using Bookings.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Rooms;
-using Rooms.Entity;
 using Rooms.Infrastructure;
-using Rooms.Services;
 using Shared.Interfaces;
-using Shared.Interfaces.BaseClasses;
 using Shared.Interfaces.Implementation;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,16 +15,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Microservice specific
-builder.Services.AddDbContext<RoomsDbContext>((options) => {
-    
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    });
-builder.Services.AddScoped<IRepository<Room>, Repository<Room>>((services) => {
-    return new Repository<Room>(services.GetRequiredService<RoomsDbContext>());
-});
-builder.Services.AddScoped<ISimpleService<Room>, Service>();
 
+// Microservice specific
+builder.Services.AddDbContext<BookingsDbContext>((options) => {
+
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddScoped<IRepository<Booking>, Repository<Booking>>((services) => {
+    return new Repository<Booking>(services.GetRequiredService<BookingsDbContext>());
+});
+builder.Services.AddScoped<ISimpleService<Booking>, Service>();
 
 
 var app = builder.Build();
@@ -38,7 +34,7 @@ if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
     {
-        RoomsDbContext context = scope.ServiceProvider.GetRequiredService<RoomsDbContext>();
+        BookingsDbContext context = scope.ServiceProvider.GetRequiredService<BookingsDbContext>();
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         context.MockData();
