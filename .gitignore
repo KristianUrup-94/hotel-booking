@@ -51,6 +51,9 @@ CodeCoverage/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# Visual studio
+.vs/
+
 # NUnit
 *.VisualState.xml
 TestResult.xml

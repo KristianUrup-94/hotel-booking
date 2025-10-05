@@ -1,7 +1,8 @@
-﻿using Shared.Interfaces;
+﻿using Rooms.Entity;
+using Shared.Interfaces;
 using Shared.Interfaces.BaseClasses;
 
-namespace Rooms
+namespace Rooms.Services
 {
     public class Service : SimpleService<Room>, ISimpleService<Room>
     {
