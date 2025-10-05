@@ -36,8 +36,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    RoomsDbContext context = app.Services.GetRequiredService<RoomsDbContext>();
-    context.Database.EnsureCreated();
+    using (var scope = app.Services.CreateScope())
+    {
+        RoomsDbContext context = scope.ServiceProvider.GetRequiredService<RoomsDbContext>();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+        context.MockData();
+    }
     app.UseSwagger();
     app.UseSwaggerUI();
 }

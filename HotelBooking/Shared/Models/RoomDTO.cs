@@ -1,24 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Rooms.Entity
+namespace Shared.Models
 {
     /// <summary>
-    /// A Room which can be booked
+    /// Data transfer object for Room
     /// </summary>
-    public class Room
+    public class RoomDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         /// <summary>
         /// Unique id of the room
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// The name of the 
         /// <para>(Room 101)</para>
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
         /// <summary>
         /// Description of the Room 
         /// </summary>

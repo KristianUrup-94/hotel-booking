@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rooms.Entity;
+using Shared.Config;
 using Shared.Interfaces;
+using Shared.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,86 +18,103 @@ namespace Rooms.Controllers
         {
             _roomService = roomService;
         }
-        // GET: api/<RoomController>
+        /// <summary>
+        /// Endpoint for getting a list of rooms
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Room>> Get()
+        public ActionResult<List<RoomDTO>> Get()
         {
-            return new List<Room> { 
-                new Room 
-                { 
-                    Id = 1,
-                    Name = "Room 101",
-                    Description = "This is normal room, with 2 separated beds"
-                },
-                new Room 
-                {
-                    Id = 2,
-                    Name = "Room 102",
-                    Description = "This is normal room, with 2 separated beds"
-                },
-                new Room 
-                {
-                    Id = 3,
-                    Name = "Room 103",
-                    Description = "This is normal room, with 2 separated beds"
-                },
-                new Room 
-                {
-                    Id = 4,
-                    Name = "Room 201",
-                    Description = "This is mini suite, with a  queen size bed"
-                },
-                new Room
-                {
-                    Id = 5,
-                    Name = "Room 304",
-                    Description = "This is suite, with a king size bed and a lovely view over Esbjerg City"
-                },
-                new Room
-                {
-                    Id = 6,
-                    Name = "Room 305",
-                    Description = "This is suite, with a king size bed and a lovely view over Esbjerg City"
-                },
-                new Room
-                {
-                    Id = 7,
-                    Name = "Room 306",
-                    Description = "This is double suite, with a king size bed, a queen size bed in separated rooms and a lovely view over Esbjerg City"
-                },
-
-                new Room
-                {
-                    Id = 8,
-                    Name = "Room 701",
-                    Description = "This is presidential suite, with a king size bed, a queen size bed in separated rooms and a lovely view over Esbjerg City"
-                }
-            };
+            try
+            {
+                return Ok(_roomService.GetAll().Select(x => MapperConfig.Automapper<Room, RoomDTO>(x)).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // GET api/<RoomController>/5
+        /// <summary>
+        /// Endpoint for getting a single room
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<RoomDTO> Get(int id)
         {
-            return "value";
+            try
+            {
+                var room = _roomService.Get(id);
+                if (room is null)
+                {
+                    return NoContent();
+                }
+                return Ok(MapperConfig.Automapper<Room,RoomDTO>(room));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
-        // POST api/<RoomController>
+        /// <summary>
+        /// Endpoint for creating a room
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult Post([FromBody] RoomDTO room)
         {
+            try
+            {
+                _roomService.Create(MapperConfig.Automapper<RoomDTO,Room>(room));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT api/<RoomController>/5
+        /// <summary>
+        /// Endpoint for updating a room
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="room"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, [FromBody] RoomDTO room)
         {
+            try
+            {
+                _roomService.Update(MapperConfig.Automapper<RoomDTO, Room>(room));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // DELETE api/<RoomController>/5
+        /// <summary>
+        /// Endpoint for deleting a room
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            try
+            {
+                _roomService.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
