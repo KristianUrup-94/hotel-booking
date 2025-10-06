@@ -47,5 +47,33 @@ namespace Test
             // Assert
             _repoMock.Verify((mock) => mock.Add(room), Times.Once());
         }
+
+        [Fact]
+        public void Update_VerifiesCallsRepoOnce()
+        {
+            // Arrange
+            Room room = new Room { Id = 1, Name = "Testing Update" };
+
+            // Action 
+            var roomService = new Rooms.Services.Service(_repoMock.Object);
+            roomService.Update(room);
+
+            // Assert
+            _repoMock.Verify((mock) => mock.Update(room), Times.Once());
+        }
+
+        [Fact]
+        public void Delete_VerifiesCallsRepoOnce()
+        {
+            // Arrange
+            int id = 1;
+
+            // Action 
+            var roomService = new Rooms.Services.Service(_repoMock.Object);
+            roomService.Delete(id);
+
+            // Assert
+            _repoMock.Verify((mock) => mock.Delete(id), Times.Once());
+        }
     }
 }
