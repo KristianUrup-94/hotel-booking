@@ -33,5 +33,19 @@ namespace Test
             Assert.Equivalent(2, result.Count());
             _repoMock.Verify((mock) => mock.GetAll(), Times.Once());
         }
+
+        [Fact]
+        public void Create_VerifiesCallsRepoOnce()
+        {
+            // Arrange
+            Room room = new Room { Id = 1, Name = "Testing Create" };
+
+            // Action 
+            var roomService = new Rooms.Services.Service(_repoMock.Object);
+            roomService.Create(room);
+
+            // Assert
+            _repoMock.Verify((mock) => mock.Add(room), Times.Once());
+        }
     }
 }
