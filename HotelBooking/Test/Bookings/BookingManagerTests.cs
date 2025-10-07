@@ -14,8 +14,55 @@ namespace Test.Bookings
 {
     public class BookingManagerTests
     {
+        #region Private properties
         private readonly Mock<IRepository<Booking>> _repoMock;
-        private readonly Mock<ISimpleService<Booking>> _serviceMock;
+        private static readonly List<Booking> InitialBookings = new List<Booking>
+        {
+            new Booking
+            {
+                Id = 1,
+                BookingId = 1001,
+                From = new DateTimeOffset(2026, 10, 3, 15, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero),
+                RoomId = 1
+            },
+            new Booking
+            {
+                Id = 2,
+                BookingId = 1002,
+                From = new DateTimeOffset(2026, 10, 3, 15, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 10, 6, 10, 0, 0, TimeSpan.Zero),
+                RoomId = 2
+            },
+            new Booking
+            {
+                Id = 3,
+                BookingId = 1003,
+                From = new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero),
+                RoomId = 2
+            },
+            new Booking
+            {
+                Id = 4,
+                BookingId = 1004,
+                From = new DateTimeOffset(2026, 10, 12, 15, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero),
+                RoomId = 3
+            }
+        };
+
+        public static IEnumerable<object[]> EmptyListExpected
+        {
+            get
+            {
+                yield return new object[] { new DateTimeOffset(2026, 10, 4, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+            }
+        }
+
 
         public static IEnumerable<object[]> BookingRequestsInvalid
         {
@@ -37,13 +84,16 @@ namespace Test.Bookings
                 yield return new object[] { 1, new DateTimeOffset(2026, 1, 10, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 1, 12, 10, 0, 0, TimeSpan.Zero) };
             }
         }
+        #endregion
 
+        #region Constructor
         public BookingManagerTests()
         {
             _repoMock = new Mock<IRepository<Booking>>();
         }
-        
+        #endregion 
 
+        #region Check Room Availability
         /// <summary>
         /// CheckRoomAvailability should throw error due to date from is exceeded
         /// </summary>
@@ -189,6 +239,9 @@ namespace Test.Bookings
             _repoMock.Verify(repo => repo.Query(), Times.Once());
         }
 
+        #endregion
+
+        #region Book Room
         /// <summary>
         /// BookRoom succeeds booking
         /// </summary>
@@ -257,5 +310,36 @@ namespace Test.Bookings
             InvalidDataException ex = Assert.Throws<InvalidDataException>(() => bookingHandler.BookRoom(request));
             Assert.Equal("Room is not available", ex.Message);
         }
+        #endregion
+
+        #region Get RoomIds Booked In Period
+
+        /// <summary>
+        /// Gets the Id of the booked rooms in the given Period 
+        /// </summary>
+        /// <param name="request">Request for a booking</param>
+        [Theory]
+        [MemberData(nameof(EmptyListExpected))]
+        public void GetRoomIdsBookedInPeriod_ShouldReturnList(DateTimeOffset from, DateTimeOffset to)
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = from,
+                To = to
+            };
+
+            _repoMock.Setup(mock => mock.Query()).Returns(InitialBookings.AsQueryable());
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
+
+            // Assert 
+            Assert.Empty(result);
+            _repoMock.Verify(repo => repo.Query(), Times.Once());
+        }
+        #endregion 
+
     }
 }

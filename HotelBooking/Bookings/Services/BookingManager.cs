@@ -58,5 +58,14 @@ namespace Bookings.Services
             _repo.Add(booking);
             return booking.Id;
         }
+
+        /// <summary>
+        /// Gets all of the roomIds booked in a given period
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetRoomIdsBookedInPeriod(AvailableRoomsRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
