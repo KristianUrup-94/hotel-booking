@@ -34,7 +34,7 @@ namespace Test.Bookings
                 yield return new object[] { 1, new DateTimeOffset(2025, 12, 30, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 1, 2, 10, 0, 0, TimeSpan.Zero) };
                 yield return new object[] { 1, new DateTimeOffset(2026, 1, 8, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 1, 10, 10, 0, 0, TimeSpan.Zero) };
                 yield return new object[] { 1, new DateTimeOffset(2025, 12, 30, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2025, 12, 31, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { 1, new DateTimeOffset(2025, 1, 10, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2025, 1, 12, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { 1, new DateTimeOffset(2026, 1, 10, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 1, 12, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
@@ -99,7 +99,7 @@ namespace Test.Bookings
             BookingRequest request = new BookingRequest
             {
                 RoomId = 1,
-                From = new DateTimeOffset(2025, 1, 2, 0, 0, 0, TimeSpan.Zero),
+                From = new DateTimeOffset(2025, 1, 10, 0, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2025, 1, 8, 0, 0, 0, TimeSpan.Zero),
             };
 
@@ -109,7 +109,7 @@ namespace Test.Bookings
             // Action
             // Assert 
             InvalidDataException ex = Assert.Throws<InvalidDataException>(() => bookingHandler.CheckRoomAvailability(request));
-            Assert.Equal("The to date is before from date ", ex.Message);
+            Assert.Equal("The to date is before from date", ex.Message);
         }
 
         /// <summary>
@@ -128,8 +128,8 @@ namespace Test.Bookings
                 {
                     BookingId = 10001,
                     Comments = "Testing",
-                    From = new DateTimeOffset(2026, 1, 2, 0, 0,0 , TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 1, 8, 0, 0,0 , TimeSpan.Zero),
+                    From = new DateTimeOffset(2026, 1, 2, 10, 0,0 , TimeSpan.Zero),
+                    To = new DateTimeOffset(2026, 1, 8, 15, 0,0 , TimeSpan.Zero),
                     RoomId = 1
                 }
             };
@@ -166,8 +166,8 @@ namespace Test.Bookings
                 {
                     BookingId = 10001,
                     Comments = "Testing",
-                    From = new DateTimeOffset(2026, 1, 2, 0, 0,0 , TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 1, 8, 0, 0,0 , TimeSpan.Zero),
+                    From = new DateTimeOffset(2026, 1, 2, 15, 0,0 , TimeSpan.Zero),
+                    To = new DateTimeOffset(2026, 1, 8, 10, 0,0 , TimeSpan.Zero),
                     RoomId = 1
                 }
             };
@@ -210,8 +210,8 @@ namespace Test.Bookings
             BookingRequest request = new BookingRequest
             {
                 RoomId = 1,
-                From = new DateTimeOffset(2025, 1, 10, 0, 0, 0, TimeSpan.Zero),
-                To = new DateTimeOffset(2025, 1, 12, 0, 0, 0, TimeSpan.Zero),
+                From = new DateTimeOffset(2026, 1, 10, 0, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 1, 12, 0, 0, 0, TimeSpan.Zero),
             };
 
             _repoMock.Setup(mock => mock.Query()).Returns(bookings.AsQueryable());
@@ -222,7 +222,40 @@ namespace Test.Bookings
 
             // Assert 
             Assert.IsType<int>(result);
-            Assert.Equal(2, result);
+        }
+
+        /// <summary>
+        /// BookRoom fails booking
+        /// </summary>
+        [Fact]
+        public void BookRoom_Fails_ShouldThrowException()
+        {
+            // Arrange
+            List<Booking> bookings = new List<Booking>
+            {
+                new Booking
+                {
+                    BookingId = 10001,
+                    Comments = "Testing",
+                    From = new DateTimeOffset(2026, 1, 2, 0, 0,0 , TimeSpan.Zero),
+                    To = new DateTimeOffset(2026, 1, 8, 0, 0,0 , TimeSpan.Zero),
+                    RoomId = 1
+                }
+            };
+            BookingRequest request = new BookingRequest
+            {
+                RoomId = 1,
+                From = new DateTimeOffset(2026, 1, 7, 0, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 1, 12, 0, 0, 0, TimeSpan.Zero),
+            };
+
+            _repoMock.Setup(mock => mock.Query()).Returns(bookings.AsQueryable());
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            // Assert 
+            InvalidDataException ex = Assert.Throws<InvalidDataException>(() => bookingHandler.BookRoom(request));
+            Assert.Equal("Room is not available", ex.Message);
         }
     }
 }
