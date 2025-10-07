@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bookings\Bookings.csproj" />
     <ProjectReference Include="..\HotelBooking\Rooms.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
