@@ -56,14 +56,21 @@ namespace Test.Bookings
         {
             get
             {
-                yield return new object[] { new DateTimeOffset(2026, 10, 4, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 12, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 14, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 1, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 3, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
         public static IEnumerable<object[]> OneInTheListExpected
+        {
+            get
+            {
+                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+            }
+        }
+
+        public static IEnumerable<object[]> TwoInTheListExpected
         {
             get
             {
@@ -73,21 +80,14 @@ namespace Test.Bookings
             }
         }
 
-        public static IEnumerable<object[]> TwoInTheListExpected
-        {
-            get
-            {
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
-            }
-        }
-
         public static IEnumerable<object[]> ThreeInTheListExpected
         {
             get
             {
-                yield return new object[] { new DateTimeOffset(2026, 10, 12, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 1, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 3, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 4, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 12, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
@@ -394,7 +394,7 @@ namespace Test.Bookings
             List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
 
             // Assert 
-            Assert.Empty(result);
+            Assert.Single(result);
             _repoMock.Verify(repo => repo.Query(), Times.Once());
         }
 
@@ -422,7 +422,7 @@ namespace Test.Bookings
             List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
 
             // Assert 
-            Assert.Empty(result);
+            Assert.Equal(2, result.Count());
             _repoMock.Verify(repo => repo.Query(), Times.Once());
         }
 
@@ -450,7 +450,7 @@ namespace Test.Bookings
             List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
 
             // Assert 
-            Assert.Empty(result);
+            Assert.Equal(3, result.Count());
             _repoMock.Verify(repo => repo.Query(), Times.Once());
         }
 

@@ -65,15 +65,22 @@ namespace Bookings.Services
         /// <returns>List of room ids</returns>
         public List<int> GetRoomIdsBookedInPeriod(AvailableRoomsRequest request)
         {
-            if (request.From > request.To) 
+            if (request.From > request.To)
             {
                 throw new InvalidDataException("The to date is before from date");
             }
-            if (request.From < DateTimeOffset.Now) 
+            if (request.From < DateTimeOffset.Now)
             {
                 throw new InvalidDataException("The from date is already exceeded");
             }
-            return new List<int>();
+            List<int> result = _repo.Query()
+                .Where(x => (x.From > request.From && x.From < request.To) ||
+                            (x.To > request.From && x.To < request.To) ||
+                            (request.From > x.From && request.To < x.To))
+                .Select(x => x.RoomId)
+                .Distinct()
+                .ToList();
+            return result;
         }
     }
 }
