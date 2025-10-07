@@ -16,5 +16,11 @@ namespace Bookings.Services.Interfaces
         /// </summary>
         /// <param name="req">Request for booking</param>
         int BookRoom(BookingRequest req);
+
+        /// <summary>
+        /// Gets all of the roomIds booked in a given period
+        /// </summary>
+        /// <returns></returns>
+        List<int> GetRoomIdsBookedInPeriod(AvailableRoomsRequest request);
     }
 }
