@@ -62,10 +62,18 @@ namespace Bookings.Services
         /// <summary>
         /// Gets all of the roomIds booked in a given period
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of room ids</returns>
         public List<int> GetRoomIdsBookedInPeriod(AvailableRoomsRequest request)
         {
-            throw new NotImplementedException();
+            if (request.From > request.To) 
+            {
+                throw new InvalidDataException("The to date is before from date");
+            }
+            if (request.From < DateTimeOffset.Now) 
+            {
+                throw new InvalidDataException("The from date is already exceeded");
+            }
+            return new List<int>();
         }
     }
 }
