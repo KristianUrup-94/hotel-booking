@@ -1,15 +1,16 @@
 using Moq;
 using Rooms.Entity;
+using Rooms.Services;
 using Shared.Interfaces;
 using Shared.Interfaces.BaseClasses;
 
-namespace Test
+namespace Test.Rooms
 {
-    public class RoomsService
+    public class RoomsSimpleServiceTests
     {
         private readonly Mock<IRepository<Room>> _repoMock;
 
-        public RoomsService()
+        public RoomsSimpleServiceTests()
         {
             _repoMock = new Mock<IRepository<Room>>();
         }
@@ -23,13 +24,13 @@ namespace Test
             new Room { Id = 2, Description = "This is the best room", Name = "Test room 2" }
             };
             _repoMock.Setup(repo => repo.GetAll()).Returns(rooms);
+            ISimpleService<Room> roomService = new Service(_repoMock.Object);
 
             // Action
-            var roomService = new Rooms.Services.Service(_repoMock.Object);
             var result = roomService.GetAll();
 
             // Assert
-            Assert.IsType<List<Room>>(rooms);
+            Assert.IsType<List<Room>>(result);
             Assert.Equivalent(2, result.Count());
             _repoMock.Verify((mock) => mock.GetAll(), Times.Once());
         }
@@ -39,9 +40,9 @@ namespace Test
         {
             // Arrange
             Room room = new Room { Id = 1, Name = "Testing Create" };
+            ISimpleService<Room> roomService = new Service(_repoMock.Object);
 
             // Action 
-            var roomService = new Rooms.Services.Service(_repoMock.Object);
             roomService.Create(room);
 
             // Assert
@@ -53,9 +54,9 @@ namespace Test
         {
             // Arrange
             Room room = new Room { Id = 1, Name = "Testing Update" };
+            ISimpleService<Room> roomService = new Service(_repoMock.Object);
 
             // Action 
-            var roomService = new Rooms.Services.Service(_repoMock.Object);
             roomService.Update(room);
 
             // Assert
@@ -67,9 +68,9 @@ namespace Test
         {
             // Arrange
             int id = 1;
+            ISimpleService<Room> roomService = new Service(_repoMock.Object);
 
             // Action 
-            var roomService = new Rooms.Services.Service(_repoMock.Object);
             roomService.Delete(id);
 
             // Assert
