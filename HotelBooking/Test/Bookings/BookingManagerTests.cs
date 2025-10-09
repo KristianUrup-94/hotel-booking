@@ -21,7 +21,7 @@ namespace Test.Bookings
             new Booking
             {
                 Id = 1,
-                BookingId = 1001,
+                BookingNo = 1001,
                 From = new DateTimeOffset(2026, 10, 3, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero),
                 RoomId = 1
@@ -29,7 +29,7 @@ namespace Test.Bookings
             new Booking
             {
                 Id = 2,
-                BookingId = 1002,
+                BookingNo = 1002,
                 From = new DateTimeOffset(2026, 10, 3, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 10, 6, 10, 0, 0, TimeSpan.Zero),
                 RoomId = 2
@@ -37,7 +37,7 @@ namespace Test.Bookings
             new Booking
             {
                 Id = 3,
-                BookingId = 1003,
+                BookingNo = 1003,
                 From = new DateTimeOffset(2026, 10, 9, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero),
                 RoomId = 2
@@ -45,7 +45,7 @@ namespace Test.Bookings
             new Booking
             {
                 Id = 4,
-                BookingId = 1004,
+                BookingNo = 1004,
                 From = new DateTimeOffset(2026, 10, 12, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero),
                 RoomId = 3
@@ -132,7 +132,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2025, 1, 2, 0, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2025, 1, 8, 0, 0,0 , TimeSpan.Zero),
@@ -166,7 +166,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2025, 1, 2, 0, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2025, 1, 8, 0, 0,0 , TimeSpan.Zero),
@@ -203,7 +203,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2026, 1, 2, 10, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2026, 1, 8, 15, 0,0 , TimeSpan.Zero),
@@ -241,7 +241,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2026, 1, 2, 15, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2026, 1, 8, 10, 0,0 , TimeSpan.Zero),
@@ -280,7 +280,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2026, 1, 2, 0, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2026, 1, 8, 0, 0,0 , TimeSpan.Zero),
@@ -315,7 +315,7 @@ namespace Test.Bookings
             {
                 new Booking
                 {
-                    BookingId = 10001,
+                    BookingNo = 10001,
                     Comments = "Testing",
                     From = new DateTimeOffset(2026, 1, 2, 0, 0,0 , TimeSpan.Zero),
                     To = new DateTimeOffset(2026, 1, 8, 0, 0,0 , TimeSpan.Zero),

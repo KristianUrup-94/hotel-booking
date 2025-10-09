@@ -29,7 +29,7 @@ namespace Test.Bookings
                 new Booking 
                 { 
                     Id = 1, 
-                    BookingId = 10001, 
+                    BookingNo = 10001, 
                     Comments = "Needs flowers on the table", 
                     From = new DateTimeOffset(2026, 2, 4, 15, 0, 0, TimeSpan.Zero), 
                     To = new DateTimeOffset(2026, 2, 7, 10, 0, 0, TimeSpan.Zero),
@@ -38,7 +38,7 @@ namespace Test.Bookings
                 new Booking
                 {
                     Id = 2,
-                    BookingId = 10002,
+                    BookingNo = 10002,
                     Comments = "Needs flowers on the table",
                     From = new DateTimeOffset(2026, 2, 4, 15, 0, 0, TimeSpan.Zero),
                     To = new DateTimeOffset(2026, 2, 7, 10, 0, 0, TimeSpan.Zero),
@@ -64,7 +64,7 @@ namespace Test.Bookings
             Booking booking = new Booking 
             { 
                 Id = 1,
-                BookingId = 10001,
+                BookingNo = 10001,
                 Comments = "Test",
                 From = new DateTimeOffset(2026, 2, 4, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 2, 7, 10, 0, 0, TimeSpan.Zero),
@@ -86,7 +86,7 @@ namespace Test.Bookings
             Booking booking = new Booking
             {
                 Id = 1,
-                BookingId = 10001,
+                BookingNo = 10001,
                 Comments = "Test",
                 From = new DateTimeOffset(2026, 2, 4, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 2, 7, 10, 0, 0, TimeSpan.Zero),

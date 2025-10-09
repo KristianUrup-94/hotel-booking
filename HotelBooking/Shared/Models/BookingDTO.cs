@@ -1,23 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Bookings.Entity
+namespace Shared.Models
 {
     /// <summary>
     /// Booking of a room
     /// </summary>
-    public class Booking
+    public class BookingDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        /// <summary>
-        /// Unique id of the booking
-        /// </summary>
-        public int Id { get; set; }
         /// <summary>
         /// Number of the booking
         /// </summary>
-        public int BookingNo { get; init; }
+        public int? BookingNo { get; set; }
         /// <summary>
         /// DateTime for when the booking starts
         /// </summary>
