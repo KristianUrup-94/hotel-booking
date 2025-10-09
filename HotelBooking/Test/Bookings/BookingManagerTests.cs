@@ -38,7 +38,7 @@ namespace Test.Bookings
             {
                 Id = 3,
                 BookingId = 1003,
-                From = new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero),
+                From = new DateTimeOffset(2026, 10, 9, 15, 0, 0, TimeSpan.Zero),
                 To = new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero),
                 RoomId = 2
             },
@@ -56,10 +56,37 @@ namespace Test.Bookings
         {
             get
             {
-                yield return new object[] { new DateTimeOffset(2026, 10, 4, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 14, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 1, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 3, 10, 0, 0, TimeSpan.Zero) };
+            }
+        }
+
+        public static IEnumerable<object[]> OneInTheListExpected
+        {
+            get
+            {
+                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 12, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+            }
+        }
+
+        public static IEnumerable<object[]> TwoInTheListExpected
+        {
+            get
+            {
+                yield return new object[] { new DateTimeOffset(2026, 10, 9, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 2, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 2, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero) };
+            }
+        }
+
+        public static IEnumerable<object[]> ThreeInTheListExpected
+        {
+            get
+            {
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 16, 10, 0, 0, TimeSpan.Zero) };
                 yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 1, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
@@ -316,11 +343,13 @@ namespace Test.Bookings
 
         /// <summary>
         /// Gets the Id of the booked rooms in the given Period 
+        /// <para>Expects empty list</para>
         /// </summary>
-        /// <param name="request">Request for a booking</param>
+        /// <param name="from">When the period starts</param>
+        /// <param name="to">When the period ends</param>
         [Theory]
         [MemberData(nameof(EmptyListExpected))]
-        public void GetRoomIdsBookedInPeriod_ShouldReturnList(DateTimeOffset from, DateTimeOffset to)
+        public void GetRoomIdsBookedInPeriod_ShouldReturnEmptyList(DateTimeOffset from, DateTimeOffset to)
         {
             // Arrange
             AvailableRoomsRequest request = new AvailableRoomsRequest
@@ -339,6 +368,133 @@ namespace Test.Bookings
             Assert.Empty(result);
             _repoMock.Verify(repo => repo.Query(), Times.Once());
         }
+
+        /// <summary>
+        /// Gets the Id of the booked rooms in the given Period 
+        /// <para>Expects 1</para>
+        /// </summary>
+        /// <param name="from">When the period starts</param>
+        /// <param name="to">When the period ends</param>
+        [Theory]
+        [MemberData(nameof(OneInTheListExpected))]
+        public void GetRoomIdsBookedInPeriod_ShouldReturnListWithOne(DateTimeOffset from, DateTimeOffset to)
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = from,
+                To = to
+            };
+
+            _repoMock.Setup(mock => mock.Query()).Returns(InitialBookings.AsQueryable());
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
+
+            // Assert 
+            Assert.Single(result);
+            _repoMock.Verify(repo => repo.Query(), Times.Once());
+        }
+
+        /// <summary>
+        /// Gets the Id of the booked rooms in the given Period
+        /// <para>Expects 2</para>
+        /// </summary>
+        /// <param name="from">When the period starts</param>
+        /// <param name="to">When the period ends</param>
+        [Theory]
+        [MemberData(nameof(TwoInTheListExpected))]
+        public void GetRoomIdsBookedInPeriod_ShouldReturnListWithTwo(DateTimeOffset from, DateTimeOffset to)
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = from,
+                To = to
+            };
+
+            _repoMock.Setup(mock => mock.Query()).Returns(InitialBookings.AsQueryable());
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
+
+            // Assert 
+            Assert.Equal(2, result.Count());
+            _repoMock.Verify(repo => repo.Query(), Times.Once());
+        }
+
+        /// <summary>
+        /// Gets the Id of the booked rooms in the given Period
+        /// <para>Expects 2</para>
+        /// </summary>
+        /// <param name="from">When the period starts</param>
+        /// <param name="to">When the period ends</param>
+        [Theory]
+        [MemberData(nameof(ThreeInTheListExpected))]
+        public void GetRoomIdsBookedInPeriod_ShouldReturnListWithThree(DateTimeOffset from, DateTimeOffset to)
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = from,
+                To = to
+            };
+
+            _repoMock.Setup(mock => mock.Query()).Returns(InitialBookings.AsQueryable());
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            List<int> result = bookingHandler.GetRoomIdsBookedInPeriod(request);
+
+            // Assert 
+            Assert.Equal(3, result.Count());
+            _repoMock.Verify(repo => repo.Query(), Times.Once());
+        }
+
+        /// <summary>
+        /// CheckRoomAvailability should throw error due to date from is exceeded
+        /// </summary>
+        [Fact]
+        public void GetRoomIdsBookedInPeriod_DateFromIsExceeded_ShouldThrowError()
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = new DateTimeOffset(2025, 1, 2, 0, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2025, 1, 8, 0, 0, 0, TimeSpan.Zero),
+            };
+
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            // Assert 
+            InvalidDataException ex = Assert.Throws<InvalidDataException>(() => bookingHandler.GetRoomIdsBookedInPeriod(request));
+            Assert.Equal("The from date is already exceeded", ex.Message);
+        }
+
+        /// <summary>
+        /// CheckRoomAvailability should throw error due to date from is exceeded
+        /// </summary>
+        [Fact]
+        public void GetRoomIdsBookedInPeriod_DateToIsBeforeDateFrom_ShouldThrowError()
+        {
+            // Arrange
+            AvailableRoomsRequest request = new AvailableRoomsRequest
+            {
+                From = new DateTimeOffset(2026, 1, 10, 0, 0, 0, TimeSpan.Zero),
+                To = new DateTimeOffset(2026, 1, 8, 0, 0, 0, TimeSpan.Zero),
+            };
+
+            IBookingManager bookingHandler = new BookingManager(_repoMock.Object);
+
+            // Action
+            // Assert 
+            InvalidDataException ex = Assert.Throws<InvalidDataException>(() => bookingHandler.GetRoomIdsBookedInPeriod(request));
+            Assert.Equal("The to date is before from date", ex.Message);
+        }
+
         #endregion 
 
     }
