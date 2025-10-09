@@ -74,9 +74,9 @@ namespace Bookings.Services
                 throw new InvalidDataException("The from date is already exceeded");
             }
             List<int> result = _repo.Query()
-                .Where(x => (x.From > request.From && x.From < request.To) ||
-                            (x.To > request.From && x.To < request.To) ||
-                            (request.From > x.From && request.To < x.To))
+                .Where(x => (x.From >= request.From && x.From <= request.To) ||
+                            (x.To >= request.From && x.To <= request.To) ||
+                            (request.From >= x.From && request.To <= x.To))
                 .Select(x => x.RoomId)
                 .Distinct()
                 .ToList();

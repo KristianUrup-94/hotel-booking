@@ -66,7 +66,7 @@ namespace Test.Bookings
             get
             {
                 yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 12, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 12, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
@@ -84,10 +84,9 @@ namespace Test.Bookings
         {
             get
             {
-                yield return new object[] { new DateTimeOffset(2026, 10, 4, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 12, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 14, 10, 0, 0, TimeSpan.Zero) };
-                yield return new object[] { new DateTimeOffset(2026, 10, 11, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 15, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 16, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 5, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
+                yield return new object[] { new DateTimeOffset(2026, 10, 1, 15, 0, 0, TimeSpan.Zero), new DateTimeOffset(2026, 10, 13, 10, 0, 0, TimeSpan.Zero) };
             }
         }
 
