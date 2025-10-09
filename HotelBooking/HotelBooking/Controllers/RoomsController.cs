@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rooms.Entity;
+using Rooms.Services;
+using Rooms.Services.Interfaces;
 using Shared.Config;
 using Shared.Interfaces;
 using Shared.Models;
@@ -13,10 +15,12 @@ namespace Rooms.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly ISimpleService<Room> _roomService;
+        private readonly IRoomManager _roomManager;
 
-        public RoomsController(ISimpleService<Room> roomService) 
+        public RoomsController(ISimpleService<Room> roomService, IRoomManager roomManager) 
         {
             _roomService = roomService;
+            _roomManager = roomManager;
         }
         /// <summary>
         /// Endpoint for getting a list of rooms
@@ -110,6 +114,24 @@ namespace Rooms.Controllers
             {
                 _roomService.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for getting rooms which are available at the given period
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("GetAllAvailableRooms")]
+        public ActionResult<List<RoomDTO>> GetAllAvailableRooms(AvailableRoomsRequest request)
+        {
+            try
+            {
+                return Ok(_roomManager.GettingAllAvailableRooms(request.From, request.To).Select(x => MapperConfig.Automapper<Room, RoomDTO>(x)));
             }
             catch (Exception ex)
             {

@@ -11,6 +11,15 @@ namespace Shared.Models
     /// </summary>
     public class AvailableRoomsRequest
     {
+        public AvailableRoomsRequest(DateTimeOffset from, DateTimeOffset to)
+        {
+            From = from;
+            To = to;
+        }
+        public AvailableRoomsRequest()
+        {
+
+        }
         /// <summary>
         /// The start of the period
         /// </summary>

@@ -5,10 +5,17 @@ using Shared.Models;
 
 namespace Bookings.Services
 {
+    /// <summary>
+    /// Manager for bookings
+    /// </summary>
     public class BookingManager : IBookingManager
     {
         private readonly IRepository<Booking> _repo;
 
+        /// <summary>
+        /// Constructor for dependency injection
+        /// </summary>
+        /// <param name="repo"></param>
         public BookingManager(IRepository<Booking> repo) 
         { 
             _repo = repo;
@@ -49,7 +56,7 @@ namespace Bookings.Services
             }
             var booking = new Booking
             {
-                BookingId = 10012,
+                BookingNo = 10012,
                 Comments = "Bring a beer to the table",
                 To = req.To,
                 From = req.From,

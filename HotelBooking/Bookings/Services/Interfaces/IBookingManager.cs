@@ -2,6 +2,9 @@
 
 namespace Bookings.Services.Interfaces
 {
+    /// <summary>
+    /// Manager for bookings
+    /// </summary>
     public interface IBookingManager
     {
         /// <summary>

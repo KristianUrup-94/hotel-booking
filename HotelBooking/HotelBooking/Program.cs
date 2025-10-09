@@ -5,6 +5,7 @@ using Rooms;
 using Rooms.Entity;
 using Rooms.Infrastructure;
 using Rooms.Services;
+using Rooms.Services.Interfaces;
 using Shared.Interfaces;
 using Shared.Interfaces.BaseClasses;
 using Shared.Interfaces.Implementation;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IRepository<Room>, Repository<Room>>((services) => {
     return new Repository<Room>(services.GetRequiredService<RoomsDbContext>());
 });
 builder.Services.AddScoped<ISimpleService<Room>, Service>();
+builder.Services.AddScoped<IRoomManager, RoomManager>();
 
 
 

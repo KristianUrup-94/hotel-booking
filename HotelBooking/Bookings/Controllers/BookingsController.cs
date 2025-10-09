@@ -1,6 +1,9 @@
 ﻿using Bookings.Entity;
+using Bookings.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Config;
 using Shared.Interfaces;
+using Shared.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,96 +13,123 @@ namespace Bookings.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        private readonly ISimpleService<Booking> _roomService;
+        private readonly ISimpleService<Booking> _bookingService;
+        private readonly IBookingManager _bookingManager;
 
-        public BookingsController(ISimpleService<Booking> roomService) 
+        public BookingsController(ISimpleService<Booking> bookingService, IBookingManager bookingManager) 
         {
-            _roomService = roomService;
+            _bookingService = bookingService;
+            _bookingManager = bookingManager;
         }
-        // GET: api/<RoomController>
+        
+        /// <summary>
+        /// Endpoint getting all of the bookings
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<Booking>> Get()
+        public ActionResult<List<BookingDTO>> Get()
         {
-            return new List<Booking> {
-                new Booking
-                {
-                    Id = 1,
-                    BookingId = 100001,
-                    From = new DateTimeOffset(2026, 4, 3, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 7, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 4
-                },
-                new Booking
-                {
-                    Id = 2,
-                    BookingId = 100002,
-                    Comments = null,
-                    From = new DateTimeOffset(2026, 4, 3, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 7, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 1
-                },
-                new Booking
-                {
-                    Id = 3,
-                    BookingId = 100003,
-                    Comments = null,
-                    From = new DateTimeOffset(2026, 4, 3, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 7, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 2
-                },
-                new Booking
-                {
-                    Id = 4,
-                    BookingId = 100004,
-                    Comments = "I want some champagne on the bed, together with flowers",
-                    From = new DateTimeOffset(2026, 4, 3, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 7, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 8
-                },
-                new Booking
-                {
-                    Id = 5,
-                    BookingId = 100005,
-                    Comments = "I want snacks at the room",
-                    From = new DateTimeOffset(2026, 4, 3, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 7, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 7
-                },
-                new Booking
-                {
-                    Id = 6,
-                    BookingId = 100006,
-                    Comments = "I want snacks at the room",
-                    From = new DateTimeOffset(2026, 4, 10, 15, 0,0, TimeSpan.Zero),
-                    To = new DateTimeOffset(2026, 4, 14, 10, 0,0, TimeSpan.Zero),
-                    RoomId = 8
-                },
-            };
+            try
+            {
+                return Ok(_bookingService.GetAll().Select(x => MapperConfig.Automapper<Booking, BookingDTO>(x)).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // GET api/<RoomController>/5
+        /// <summary>
+        /// Endpoint for getting a booking by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<BookingDTO> Get(int id)
         {
-            return "value";
+            try
+            {
+                return Ok(MapperConfig.Automapper<Booking, BookingDTO>(_bookingService.Get(id)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-        // POST api/<RoomController>
+        /// <summary>
+        /// Endpoint for creating a booking
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult Post([FromBody] BookingDTO dto)
         {
+            try
+            {
+                _bookingService.Create(MapperConfig.Automapper<BookingDTO, Booking>(dto));
+                return Ok("Create was successful completed");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT api/<RoomController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        /// <summary>
+        /// Endpoint for updating a booking
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public ActionResult Put([FromBody] BookingDTO dto)
         {
+            try
+            {
+                _bookingService.Update(MapperConfig.Automapper<BookingDTO, Booking>(dto));
+                return Ok("Update was successful completed");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // DELETE api/<RoomController>/5
+        /// <summary>
+        /// Endpoint for deleting a booking
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            try
+            {
+                _bookingService.Delete(id);
+                return Ok("Deletion was successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for getting roomIds which are booked in the given period
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("GetAllBookedRoomIds")]
+        public ActionResult<List<int>> GetAllBookedRoomIds(AvailableRoomsRequest request)
+        {
+            try
+            {
+                return Ok(_bookingManager.GetRoomIdsBookedInPeriod(request));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

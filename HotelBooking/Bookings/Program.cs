@@ -1,5 +1,6 @@
 using Bookings.Entity;
 using Bookings.Services;
+using Bookings.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Rooms;
 using Rooms.Infrastructure;
@@ -25,6 +26,16 @@ builder.Services.AddScoped<IRepository<Booking>, Repository<Booking>>((services)
     return new Repository<Booking>(services.GetRequiredService<BookingsDbContext>());
 });
 builder.Services.AddScoped<ISimpleService<Booking>, Service>();
+builder.Services.AddScoped<IBookingManager, BookingManager>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "test",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:44337");
+        });
+});
 
 
 var app = builder.Build();
