@@ -11,6 +11,11 @@
         "Path": "Bookings\\Bookings.csproj",
         "Action": "Start",
         "DebugTarget": "IIS Express"
+      },
+      {
+        "Path": "Users\\Users.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
       }
     ]
   }
