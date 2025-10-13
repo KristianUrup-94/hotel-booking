@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Interfaces;
 using Shared.Interfaces.Implementation;
+using Shared.Interfaces.Services;
 using Users.Entity;
 using Users.Infrastructure;
 using Users.Services;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IRepository<User>, Repository<User>>((services) => {
     return new Repository<User>(services.GetRequiredService<UsersDbContext>());
 });
 builder.Services.AddScoped<ISimpleService<User>, Service>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 builder.Services.AddCors(options =>
 {

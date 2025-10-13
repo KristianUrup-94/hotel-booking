@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace Shared.Interfaces
 {
+    /// <summary>
+    /// Service for validating objects
+    /// </summary>
     public interface IValidationService
     {
-        ValidationResponse ValidateNoNullOrEmpty<T>(T model, List<string> propNames);
+        /// <summary>
+        /// Validates the given properties for null, empty or whitespace
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="model">The model which contains the properties</param>
+        /// <param name="propNames">Names of the properties</param>
+        /// <returns>Response which gives the errors if any</returns>
+        ValidationResponse ValidateNullEmptyOrWhitespace<T>(T model, List<string> propNames);
     }
 }
