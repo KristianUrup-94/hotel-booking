@@ -15,10 +15,18 @@ namespace Users.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ISimpleService<User> _userService;
+        private readonly IValidationService _validationService;
+        private readonly List<string> propNamesValidation = new List<string>
+        {
+            "FirstName",
+            "LastName",
+            "Address"
+        };
 
-        public UsersController(ISimpleService<User> userService) 
+        public UsersController(ISimpleService<User> userService, IValidationService validationService) 
         {
             _userService = userService;
+            _validationService = validationService;
         }
         /// <summary>
         /// Endpoint for getting a list of users
@@ -30,6 +38,30 @@ namespace Users.Controllers
             try
             {
                 return Ok(_userService.GetAll().Select(x => MapperConfig.Automapper<User, UserDTO>(x)).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for creating a user
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Create(UserDTO dto)
+        {
+            try
+            {
+                var model = MapperConfig.Automapper<UserDTO, User>(dto);
+                var validationResult = _validationService.ValidateNullEmptyOrWhitespace(model, propNamesValidation);
+                if (validationResult.Result && model != null)
+                {
+                    _userService.Create(model);
+                    return Ok();
+                }
+                return BadRequest(validationResult.Errors!.Select(x => x + "\n"));
             }
             catch (Exception ex)
             {
@@ -59,25 +91,6 @@ namespace Users.Controllers
                 return BadRequest(ex.Message);
             }
             
-        }
-
-        /// <summary>
-        /// Endpoint for creating a user
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult Post([FromBody] UserDTO user)
-        {
-            try
-            {
-                _userService.Create(MapperConfig.Automapper<UserDTO, User>(user));
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         /// <summary>

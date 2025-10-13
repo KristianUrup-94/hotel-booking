@@ -106,8 +106,12 @@ namespace Test.Shared
 
         #endregion
 
+        /// <summary>
+        /// Test for the method ValidateNullEmptyOrWhitespace
+        /// <para>Not failing</para>
+        /// </summary>
         [Fact]
-        public void ValidationNoNullOrEmpty_NoNullAndEmpty_ShouldReturnTrue()
+        public void ValidateNullEmptyOrWhitespace_NoNullAndEmpty_ShouldReturnTrue()
         {
             // Arrange
             User user = new User
@@ -126,16 +130,20 @@ namespace Test.Shared
             };
 
             // Action
-            ValidationResponse result = validateService.ValidateNoNullOrEmpty<User>(user, propNames);
+            ValidationResponse result = validateService.ValidateNullEmptyOrWhitespace<User>(user, propNames);
 
             // Assert
             Assert.True(result.Result);
             Assert.Null(result.Errors);
         }
 
+        /// <summary>
+        /// Test for the method ValidateNullEmptyOrWhitespace
+        /// <para>Not failing due to null</para>
+        /// </summary>
         [Theory]
         [MemberData(nameof(NullProperties))]
-        public void ValidationNoNullOrEmpty_GivesNull_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
+        public void ValidateNullEmptyOrWhitespace_GivesNull_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
         {
             // Arrange
             User user = new User
@@ -154,7 +162,7 @@ namespace Test.Shared
             };
 
             // Action
-            ValidationResponse result = validateService.ValidateNoNullOrEmpty<User>(user, propNames);
+            ValidationResponse result = validateService.ValidateNullEmptyOrWhitespace<User>(user, propNames);
 
 
             // Assert
@@ -162,9 +170,13 @@ namespace Test.Shared
             Assert.Equal(errors, result.Errors);
         }
 
+        /// <summary>
+        /// Test for the method ValidateNullEmptyOrWhitespace
+        /// <para>Not failing due to empty</para>
+        /// </summary>
         [Theory]
         [MemberData(nameof(EmptyStringProperties))]
-        public void ValidationNoNullOrEmpty_GivesEmpty_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
+        public void ValidateNullEmptyOrWhitespace_GivesEmpty_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
         {
             // Arrange
             User user = new User
@@ -183,7 +195,7 @@ namespace Test.Shared
             };
 
             // Action
-            ValidationResponse result = validateService.ValidateNoNullOrEmpty<User>(user, propNames);
+            ValidationResponse result = validateService.ValidateNullEmptyOrWhitespace<User>(user, propNames);
 
 
             // Assert
@@ -196,9 +208,13 @@ namespace Test.Shared
             Assert.Equal(errors, result.Errors);
         }
 
+        /// <summary>
+        /// Test for the method ValidateNullEmptyOrWhitespace
+        /// <para>Not failing due to whitespace</para>
+        /// </summary>
         [Theory]
         [MemberData(nameof(EmptyStringProperties))]
-        public void ValidationNoNullOrEmpty_GivesWhitespace_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
+        public void ValidateNullEmptyOrWhitespace_GivesWhitespace_ShouldReturnFalseAndError(string firstName, string lastName, string address, List<string> errors)
         {
             // Arrange
             User user = new User
@@ -217,7 +233,7 @@ namespace Test.Shared
             };
 
             // Action
-            ValidationResponse result = validateService.ValidateNoNullOrEmpty<User>(user, propNames);
+            ValidationResponse result = validateService.ValidateNullEmptyOrWhitespace<User>(user, propNames);
 
 
             // Assert
