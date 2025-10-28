@@ -32,7 +32,6 @@ builder.Services.AddScoped<ISimpleService<Room>, Service>();
 builder.Services.AddScoped<IRoomManager, RoomManager>();
 
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +43,7 @@ if (app.Environment.IsDevelopment())
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         context.MockData();
+
     }
     app.UseSwagger();
     app.UseSwaggerUI();
